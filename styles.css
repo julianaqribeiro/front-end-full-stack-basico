@@ -1,0 +1,151 @@
+body,
+ul,
+li {
+    font-family: tahoma;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(243, 220, 9, 0.124);
+}
+
+header {
+    background-color: rgba(243, 220, 9, 0.124);
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+.title {    
+    width: 100%;
+    background-color: gray;
+    display: flex;
+    flex-direction: row;
+    padding: 2px 0px;
+    position: sticky;
+    top: 0px;  
+    align-items: center;
+    border-bottom: 4px solid gray;  
+}
+
+.titleText{
+    margin-left: 16px;
+    color: white;
+}
+
+.newItem {
+    background-color: rgba(243, 220, 9, 0.124);
+    padding: 30px 40px;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.newItem:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#newInput {
+    margin: 0;
+    border: 1px solid rgb(35, 32, 24);
+    width: 25%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#newQuantity {
+    margin: 0;
+    border: 1px solid rgb(35, 32, 24);
+    width: 8%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#newPrice {
+    margin: 0;
+    border: 1px solid rgb(35, 32, 24);
+    width: 5%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+
+.botaoAdicionar {
+    padding: 9px 10px;
+    background-color: rgb(35, 32, 24);
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+.botaoAdicionar:hover {
+    background-color: #2ab53a;
+    color: white;
+}
+
+.items {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.close:hover {
+    color: #f44336;
+    font-weight: bolder;
+}
+
+table,
+td {
+    border: 1px solid grey;
+    border-collapse: collapse;
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 10px;
+    font-size: 16px;
+    transition: 0.2s;
+    text-align: start;
+}
+
+th
+{
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 10px;
+    font-size: 14px;
+    transition: 0.2s;
+    text-align: start;
+    color: gray;
+}
+
+table{
+    background-color: white;
+    width: 100%;
+    margin: 16px;
+}
+
+tr:nth-child(odd){
+    background-color: #eee;
+}
+
+th:nth-child(1){
+    width: 80%;
+}
+
+tr:hover {
+    background: rgb(200, 199, 199);
+}
+
+.radio_categoria{
+
+    color: gray;
+}
+
+div_categorias{
+    display: flex;
+    flex-direction: column;
+}

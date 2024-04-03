@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Restaurante Full Stack</title>
+</head>
+
+<body>
+    <header>        
+        <div class="title"> 
+            <div>
+                <img src="img\logo.jpeg" height="100px" alt="y"> 
+            </div>
+            <div class="titleText">
+                <h1>Restaurante Full Stack</h1>
+            </div>                                  
+        </div>        
+    </header>
+
+    <section style="margin: 16px; font-size: 24px; color: gray;">
+        <div>Cardápio</div>
+    </section>
+
+     <!-- Opções para adicionar um novo item -->
+    <section class="newItem">
+        <input type="text" id="nome" placeholder="Nome:">
+        <input type="text" id="descricao" placeholder="Descrição:">
+        <input type="text" id="preco" placeholder="Preço:"> 
+        <button onclick="adicionarItem()" class="botaoAdicionar">Adicionar</button>      
+        <div id="categorias" class="div_categorias"></div>                               
+    </section>
+
+    <!-- Tabela com items existentes -->
+    <section class="items">        
+        <table id="tabelaCardapio">
+            <tr>
+                <th style="width:auto">categoria</th>
+                <th>item</th>
+                <th>preço</th>
+                <th><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px" height="15px"></th>
+            </tr>
+        </table>
+    </section>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>
