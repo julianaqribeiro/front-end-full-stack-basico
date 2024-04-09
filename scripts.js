@@ -2,10 +2,10 @@ const url_api = 'http://127.0.0.1:5000/';
 
 /*
   --------------------------------------------------------------------------------------
-  Função para obter a lista existente do servidor via requisição GET
+  Função para obter os dados do cardapio existente do servidor via requisição GET
   --------------------------------------------------------------------------------------
 */
-  const getList = async () => {
+  const getCardapio = async () => {
     
     let url = url_api + 'cardapio';
     fetch(url, {
@@ -14,13 +14,25 @@ const url_api = 'http://127.0.0.1:5000/';
       .then((response) => response.json())
       .then((data) => { 
         getListaCategoria();                                          
-        data.categorias.forEach(categoria => insertList(categoria));
+        data.categorias.forEach(categoria => inserirLinhaTabelaCardapio(categoria));
       })
       .catch((error) => {
         console.error('Error:', error);
       });
   }
 
+  /*
+    --------------------------------------------------------------------------------------
+    Chamada da função para carregamento inicial dos dados
+    --------------------------------------------------------------------------------------
+  */
+    getCardapio()
+
+  /*
+  --------------------------------------------------------------------------------------
+  Função para obter as categorias do cardapio existente do servidor via requisição GET
+  --------------------------------------------------------------------------------------
+  */ 
   const getListaCategoria = async () => {
     
     let url = url_api + 'categorias_cardapio';
@@ -30,7 +42,11 @@ const url_api = 'http://127.0.0.1:5000/';
       .then((response) => response.json())
       .then((data) => { 
         var divcategoria = document.getElementById("categorias");                                          
-        data.categorias.forEach(categoria => criarRadioCategoria(divcategoria, categoria, false));
+        
+        for (let index = 0; index < data.categorias.length; index++) {          
+          const categoria = data.categorias[index];
+          criarRadioCategoria(divcategoria, categoria, (index == 0))
+        }        
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -38,13 +54,11 @@ const url_api = 'http://127.0.0.1:5000/';
   }
   
   /*
-    --------------------------------------------------------------------------------------
-    Chamada da função para carregamento inicial dos dados
-    --------------------------------------------------------------------------------------
+  --------------------------------------------------------------------------------------
+  Função para criar os radios buttons referentes as categorias do cardapio
+  cadastradas no sistema
+  --------------------------------------------------------------------------------------
   */
-  getList()
-
-
   const criarRadioCategoria = (divcategoria, categoria, checked) => {
     
     radioInput = document.createElement('input');
@@ -57,36 +71,13 @@ const url_api = 'http://127.0.0.1:5000/';
     }
 
     var labelCategoria = document.createElement("label");
-    labelCategoria.setAttribute('class', "radio_categoria"); 
+    labelCategoria.setAttribute('class', "radioCategoria"); 
     var textoCategoria = document.createTextNode(categoria.nome);
     labelCategoria.appendChild(textoCategoria);
 
     divcategoria.appendChild(radioInput);
     divcategoria.appendChild(labelCategoria);
   }
-  
-  /*
-    --------------------------------------------------------------------------------------
-    Função para colocar um item na lista do servidor via requisição POST
-    --------------------------------------------------------------------------------------
-  */
-  const postItem = async (inputProduct, inputQuantity, inputPrice) => {
-    const formData = new FormData();
-    formData.append('nome', inputProduct);
-    formData.append('quantidade', inputQuantity);
-    formData.append('valor', inputPrice);
-  
-    let url = url_api + 'produto';
-    fetch(url, {
-      method: 'post',
-      body: formData
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }
-  
   
   /*
     --------------------------------------------------------------------------------------
@@ -102,8 +93,7 @@ const url_api = 'http://127.0.0.1:5000/';
     span.appendChild(txt);
     parent.appendChild(span);
   }
-  
-  
+    
   /*
     --------------------------------------------------------------------------------------
     Função para remover um item da lista de acordo com o click no botão close
@@ -146,37 +136,71 @@ const url_api = 'http://127.0.0.1:5000/';
   
   /*
     --------------------------------------------------------------------------------------
-    Função para adicionar um novo item com nome, quantidade e valor 
+    Função para colocar um item na lista do servidor via requisição POST
+    --------------------------------------------------------------------------------------
+  */
+  const postItem = async (inputNome, inputDescricao, inputPreco, inputCategoriaId) => {
+    const formData = new FormData();    
+    formData.append('nome', inputNome);
+    formData.append('descricao', inputDescricao);
+    formData.append('preco', inputPreco);
+    formData.append('categoria_id', inputCategoriaId);
+  
+    let url = url_api + 'item_cardapio';
+    fetch(url, {
+      method: 'post',
+      body: formData
+    })
+    .then((response) => { 
+      response.json(); 
+      if (response.status == 200){
+        alert("Item adicionado!");
+      }
+      else{
+        alert("Erro ao adicionar Item.");
+      }      
+    })        
+    .catch((error) => {
+      alert("Erro ao adicionar Item.");
+      console.error('Error:', error);
+    });
+  }
+
+  /*
+    --------------------------------------------------------------------------------------
+    Função para cadastrar um novo item do cardápio 
     --------------------------------------------------------------------------------------
   */
   const adicionarItem = () => {
-    let inputProduct = document.getElementById("newInput").value;
-    let inputQuantity = document.getElementById("newQuantity").value;
-    let inputPrice = document.getElementById("newPrice").value;
-  
-    if (inputProduct === '') {
-      alert("Escreva o nome de um item!");
-    } else if (isNaN(inputQuantity) || isNaN(inputPrice)) {
-      alert("Quantidade e valor precisam ser números!");
-    } else {
-      insertList(inputProduct, inputQuantity, inputPrice)
-      postItem(inputProduct, inputQuantity, inputPrice)
-      alert("Item adicionado!")
+
+    let inputNome = document.getElementById("nome").value;
+    let inputDescricao = document.getElementById("descricao").value;
+    let inputPreco = document.getElementById("preco").value;
+    let inputCategoriaId = document.querySelector('input[name="categoria"]:checked').value;
+
+    if (inputNome === '') {
+      alert("É obrigatório preencher o nome!");
+    } else if (inputDescricao === '') {
+      alert("É obrigatório preencher a descrição!");
+    } else if (inputPreco == 0) {
+      alert("Preço com valor inválido");
+    } else {      
+      postItem(inputNome, inputDescricao, inputPreco, inputCategoriaId)      
     }
   }
   
   /*
     --------------------------------------------------------------------------------------
-    Função para inserir items na lista apresentada
+    Função para inserir linha na tabela referente ao cardápio
     --------------------------------------------------------------------------------------
   */
-  const insertList = (categoria) => {
+  const inserirLinhaTabelaCardapio = (categoria) => {
     
     var tabela = document.getElementById('tabelaCardapio');
 
     if (categoria.itens.length == 0){
         var linha = tabela.insertRow();        
-        montarCelulaNomeCategoria(linha, categoria.nome, 1);
+        inserirCelulaNomeCategoria(linha, categoria.nome, 1);
 
         var cel = linha.insertCell(1);
         cel.textContent = "Nenhum item cadastrado.";
@@ -194,15 +218,15 @@ const url_api = 'http://127.0.0.1:5000/';
         var num_celula_item = 0;
         
         if (i == 0){            
-            montarCelulaNomeCategoria(linha, categoria.nome, categoria.itens.length);            
+          inserirCelulaNomeCategoria(linha, categoria.nome, categoria.itens.length);            
             num_celula_item = 1;
         }
         
-        montarCelulasItemCardapio(linha, categoria.itens[i], num_celula_item);           
+        inserirCelulasItemCardapio(linha, categoria.itens[i], num_celula_item);           
     }     
   }
 
-  const montarCelulaNomeCategoria = (linha, nome_categoria, numRowSpan) => {
+  const inserirCelulaNomeCategoria = (linha, nome_categoria, numRowSpan) => {
     
     var cel = linha.insertCell(0);
     cel.innerHTML = '<h3>' + nome_categoria + "<h3>"; 
@@ -210,7 +234,7 @@ const url_api = 'http://127.0.0.1:5000/';
     cel.style.width = 'auto';
   }
 
-  const montarCelulasItemCardapio = (linha, item, num_celula_item) => {
+  const inserirCelulasItemCardapio = (linha, item, num_celula_item) => {
                        
     var cel_nome_descricao = linha.insertCell(num_celula_item);
     cel_nome_descricao.innerHTML = '<b>' + item.nome + '</b><br><h5>' + item.descricao +"</h5>"; 

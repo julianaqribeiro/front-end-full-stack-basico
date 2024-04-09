@@ -27,12 +27,22 @@
     </section>
 
      <!-- Opções para adicionar um novo item -->
-    <section class="newItem">
-        <input type="text" id="nome" placeholder="Nome:">
-        <input type="text" id="descricao" placeholder="Descrição:">
-        <input type="text" id="preco" placeholder="Preço:"> 
-        <button onclick="adicionarItem()" class="botaoAdicionar">Adicionar</button>      
-        <div id="categorias" class="div_categorias"></div>                               
+    <section class="campos">
+        <div class="divCampos">
+            <div>            
+                <div id="categorias"></div>
+            </div>
+            <div class="divNomePreco">
+                <input type="text" id="nome" placeholder="Nome:">
+                <input type="number" step=".01" id="preco" placeholder="Preço:">
+            </div>
+            <div>
+                <textarea id="descricao" placeholder="Descrição:"></textarea>            
+            </div>
+        </div>                       
+        <div class="divBotao">
+            <button onclick="adicionarItem()" class="botaoAdicionar">Adicionar</button>
+        </div>
     </section>
 
     <!-- Tabela com items existentes -->
