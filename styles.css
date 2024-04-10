@@ -28,6 +28,7 @@ header {
 }
 
 .titleText{
+    font-family: tahoma;
     margin-left: 16px;
     color: white;
 }
@@ -127,7 +128,7 @@ header {
 
 .close:hover {
     color: #f44336;
-    font-weight: bolder;
+    font-weight: bolder;    
 }
 
 table,
@@ -169,6 +170,31 @@ th:nth-child(1){
 
 tr:hover {
     background: rgb(200, 199, 199);
+}
+
+.linhaCategoria{
+    font-family: tahoma;
+    background-color: gray;    
+    color: white;  
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.celulaNomeItemCardapio{
+    font-family: tahoma;      
+    font-size: 13px;    
+}
+
+.celulaPrecoItemCardapio{
+    font-family: tahoma;      
+    font-size: 13px; 
+    text-align: right;   
+}
+
+.celulaDeletarItemCardapio{
+    font-family: tahoma;      
+    font-size: 13px;
+    text-align: center; 
 }
 
 

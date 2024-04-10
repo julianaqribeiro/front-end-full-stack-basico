@@ -1,19 +1,35 @@
 const url_api = 'http://127.0.0.1:5000/';
 
+
+const limparTabelaCardapio = () =>{
+
+  var tableHeaderRowCount = 1;
+  var table = document.getElementById('tabelaCardapio');
+  var rowCount = table.rows.length;
+  if (rowCount > 0){
+    for (var i = tableHeaderRowCount; i < rowCount; i++) {
+      table.deleteRow(tableHeaderRowCount);
+    }
+  }  
+}
+
 /*
   --------------------------------------------------------------------------------------
   Função para obter os dados do cardapio existente do servidor via requisição GET
   --------------------------------------------------------------------------------------
 */
-  const getCardapio = async () => {
+  const getCardapio = async (criarRadioButtonCategoria = false) => {
     
+    limparTabelaCardapio();
     let url = url_api + 'cardapio';
     fetch(url, {
       method: 'get',
     })
       .then((response) => response.json())
       .then((data) => { 
-        getListaCategoria();                                          
+        if (criarRadioButtonCategoria){
+          getListaCategoria();
+        }                                                    
         data.categorias.forEach(categoria => inserirLinhaTabelaCardapio(categoria));
       })
       .catch((error) => {
@@ -26,7 +42,7 @@ const url_api = 'http://127.0.0.1:5000/';
     Chamada da função para carregamento inicial dos dados
     --------------------------------------------------------------------------------------
   */
-    getCardapio()
+    getCardapio(true)
 
   /*
   --------------------------------------------------------------------------------------
@@ -105,13 +121,11 @@ const url_api = 'http://127.0.0.1:5000/';
     for (i = 0; i < close.length; i++) {
       close[i].onclick = function () {                      
         
-        let div = this.parentElement.parentElement;
         const idTem = this.getAttribute('id'); 
 
         if (confirm(`Deseja realmente excluir o item selecionado ?`)) {
-          div.remove()
-          deletarItemCardapio(idTem)
-          alert("Item removido com sucesso!")
+          deletarItemCardapio(idTem)          
+          
         }
       }
     }
@@ -128,7 +142,16 @@ const url_api = 'http://127.0.0.1:5000/';
     fetch(url, {
       method: 'delete'
     })
-      .then((response) => response.json() )
+      .then((response) => {
+        response.json();
+        if (response.status == 200){ 
+          getCardapio(); 
+          alert("Item removido com sucesso!");
+        }
+        else{
+          alert("Erro ao remover item do cardápio.");
+        }
+      })
       .catch((error) => {
         console.error('Error:', error);
       });
@@ -153,7 +176,8 @@ const url_api = 'http://127.0.0.1:5000/';
     })
     .then((response) => { 
       response.json(); 
-      if (response.status == 200){
+      if (response.status == 200){        
+        getCardapio();
         alert("Item adicionado!");
       }
       else{
@@ -196,51 +220,56 @@ const url_api = 'http://127.0.0.1:5000/';
   */
   const inserirLinhaTabelaCardapio = (categoria) => {
     
-    var tabela = document.getElementById('tabelaCardapio');
+    let tabela = document.getElementById('tabelaCardapio');
 
     if (categoria.itens.length == 0){
-        var linha = tabela.insertRow();        
-        inserirCelulaNomeCategoria(linha, categoria.nome, 1);
-
-        var cel = linha.insertCell(1);
-        cel.textContent = "Nenhum item cadastrado.";
-        cel.colSpan = 2;
-
-        var cel = linha.insertCell(-1);
-        cel.textContent = "";
-
+        
+        inserirLinhaNomeCategoria(tabela, categoria.nome);
+        inserirLinhaNenhumItemCadastrado(tabela);        
         return;
     }
    
-    for (var i = 0; i < categoria.itens.length; i++) {                        
-       
-        var linha = tabela.insertRow();
-        var num_celula_item = 0;
-        
+    for (let i = 0; i < categoria.itens.length; i++) {                        
+                       
         if (i == 0){            
-          inserirCelulaNomeCategoria(linha, categoria.nome, categoria.itens.length);            
-            num_celula_item = 1;
+          inserirLinhaNomeCategoria(tabela, categoria.nome);                        
         }
-        
-        inserirCelulasItemCardapio(linha, categoria.itens[i], num_celula_item);           
+                        
+        inserirLinhaItemCardapio(tabela, categoria.itens[i]);           
     }     
   }
 
-  const inserirCelulaNomeCategoria = (linha, nome_categoria, numRowSpan) => {
+  const inserirLinhaNomeCategoria = (tabela, nome_categoria) => {
     
-    var cel = linha.insertCell(0);
-    cel.innerHTML = '<h3>' + nome_categoria + "<h3>"; 
-    cel.rowSpan = numRowSpan;
+    let linha = tabela.insertRow();
+    let cel = linha.insertCell(0);
+    cel.innerHTML = '<b>' + nome_categoria + '<b>'; 
+    cel.colSpan = 3;
     cel.style.width = 'auto';
+    cel.className = 'linhaCategoria';
   }
 
-  const inserirCelulasItemCardapio = (linha, item, num_celula_item) => {
-                       
-    var cel_nome_descricao = linha.insertCell(num_celula_item);
-    cel_nome_descricao.innerHTML = '<b>' + item.nome + '</b><br><h5>' + item.descricao +"</h5>"; 
+  const inserirLinhaNenhumItemCadastrado = (tabela) => {
+    
+    let linha = tabela.insertRow();        
+    let cel = linha.insertCell(0);
+    cel.innerHTML = 'Nenhum item cadastrado.'; 
+    cel.colSpan = 3;
+    cel.style.width = 'auto';
+    cel.className = 'celulaNomeItemCardapio';
+  }
 
-    var cel_preco = linha.insertCell(num_celula_item + 1);
+  const inserirLinhaItemCardapio = (tabela, item) => {
+         
+    let linha = tabela.insertRow();
+        
+    let cel_nome_descricao = linha.insertCell(0);
+    cel_nome_descricao.innerHTML = '<b>' + item.nome + '</b><br><br>' + item.descricao; 
+    cel_nome_descricao.className = 'celulaNomeItemCardapio';
+
+    let cel_preco = linha.insertCell(1);
     cel_preco.textContent = item.preco;
+    cel_preco.className = 'celulaPrecoItemCardapio';
     
     criarBotaoDeletarItem(linha.insertCell(-1), item.id);
     document.getElementById("nome").value = "";
