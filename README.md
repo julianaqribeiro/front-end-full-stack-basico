@@ -1,6 +1,6 @@
 # front-end-full-stack-basico
 Este pequeno projeto faz parte do MVP do módulo **Desenvolvimento Full Stack Básico** 
-do curso de **Pós-Graduação em Desenvolvimento Full Stack** 
+do curso de **Pós-Graduação em Desenvolvimento Full Stack** da PUC-Rio
 
 Consiste em uma página web responsável pelo Cadastro do Cardápio de um Restaurante.
 Nessa versão foram implementadas as funcionalidades de adicionar e excluir item do 
